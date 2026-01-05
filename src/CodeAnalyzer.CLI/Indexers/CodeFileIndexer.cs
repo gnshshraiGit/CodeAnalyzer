@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.SqliteVec;
 using Spectre.Console;
+using Microsoft.Extensions.VectorData;
 
 namespace CodeAnalyzer.Indexers
 {
@@ -49,8 +50,6 @@ namespace CodeAnalyzer.Indexers
 
             await AnsiConsole.Status().StartAsync("Indexing...", async ctx =>
             {
-                List<string> fileExtensionFilter = readingOptionsFileExtensions;
-
                 var files = Directory.GetFiles(codeBaseRootDirectory, "*", SearchOption.AllDirectories).Except(
                     readingOptionsExcludePaths.SelectMany(excludePath =>
                         Directory.GetFiles(codeBaseRootDirectory, "*", SearchOption.AllDirectories)
@@ -61,9 +60,12 @@ namespace CodeAnalyzer.Indexers
 
                 foreach (var file in files)
                 {
+                    AnsiConsole.WriteLine(file);
                     ctx.Status = $"Indexing [green]{file}[/]";
                     var content = await File.ReadAllTextAsync(file);
-                    var embedding = await embedService.GenerateAsync(content);
+                    var embedding = await embedService.GenerateAsync(content, new EmbeddingGenerationOptions() {
+                        Dimensions = 1536
+                    });
                     await collection.UpsertAsync(new CodeSnippet
                     {
                         FileName = file,
