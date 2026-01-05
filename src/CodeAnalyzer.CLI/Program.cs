@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
-using Spectre.Console;
 using Microsoft.Extensions.Configuration;
 using System;
 using Microsoft.SemanticKernel.Connectors.SqliteVec;
-using System.Linq;
 using CodeAnalyzer;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +20,7 @@ internal class Program
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
+
         services.AddSingleton<IConfiguration>(config);
 
         services.AddSingleton<Kernel>(sp =>
