@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.SqliteVec;
 using Spectre.Console;
-using Microsoft.Extensions.VectorData;
 
 namespace CodeAnalyzer.Indexers
 {

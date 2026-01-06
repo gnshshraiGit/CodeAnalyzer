@@ -4,7 +4,6 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.SqliteVec;
-using Microsoft.Extensions.VectorData;
 
 namespace CodeAnalyzer.Plugins
 {
