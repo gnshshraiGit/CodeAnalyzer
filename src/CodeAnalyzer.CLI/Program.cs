@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
 using CodeAnalyzer.Indexers;
 using CodeAnalyzer.Agents;
+using Microsoft.Extensions.Logging;
 
 internal class Program
 {
@@ -21,6 +22,8 @@ internal class Program
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
+        services.AddKernel();
+
         services.AddSingleton<IConfiguration>(config);
 
         services.AddSingleton<Kernel>(sp =>
@@ -30,11 +33,13 @@ internal class Program
             var deploymentName = config["AzureOpenAI:ModelId"];
             var apiKey = config["AzureOpenAI:Apikey"];
             var embedDeploymentName = config["AzureOpenAI:EmbedDeploymentModelId"];
-            var kernel = Kernel.CreateBuilder()
-                .AddAzureOpenAIChatCompletion(deploymentName, endpoint, apiKey)
-                .AddAzureOpenAIEmbeddingGenerator(embedDeploymentName, endpoint, apiKey)
-                .Build();
-            return kernel;
+            var allowLogging = config.GetValue<bool>("Logging:Enabled");
+            var kernelBuilder = Kernel.CreateBuilder();
+            kernelBuilder.AddAzureOpenAIChatCompletion(deploymentName, endpoint, apiKey);
+            kernelBuilder.AddAzureOpenAIEmbeddingGenerator(embedDeploymentName, endpoint, apiKey);
+            if(allowLogging)
+                kernelBuilder.Services.AddLogging(s => s.AddConsole());
+            return kernelBuilder.Build();
         });
 
         services.AddSingleton<SqliteVectorStore>(sp => {

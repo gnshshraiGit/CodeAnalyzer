@@ -48,6 +48,7 @@ namespace CodeAnalyzer
             var includeSubDirectories = _config.GetSection("ReadOptions:IncludeSubDirectories").Value;
             var collectionName = _config["VectorStore:CollectionName"] ?? "snippets";
 
+            AnsiConsole.Clear();
             AnsiConsole.Write(new FigletText("Code Analyzer CLI").Color(Color.Green));
 
             // 3. Indexing Logic
