@@ -38,7 +38,8 @@ internal class Program
             kernelBuilder.AddAzureOpenAIChatCompletion(deploymentName, endpoint, apiKey);
             kernelBuilder.AddAzureOpenAIEmbeddingGenerator(embedDeploymentName, endpoint, apiKey);
             if(allowLogging)
-                kernelBuilder.Services.AddLogging(s => s.AddConsole());
+                kernelBuilder.Services.AddLogging(s => s.AddConsole()
+                .SetMinimumLevel(config.GetValue<LogLevel>("Logging:LogLevel:Default")));
             return kernelBuilder.Build();
         });
 
